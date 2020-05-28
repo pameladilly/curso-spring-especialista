@@ -47,6 +47,7 @@ public class PedidoController {
                 .orElseThrow(
                         () -> new ResponseStatusException(NOT_FOUND, "Pedido nao encontrado")
                 );
+        //teste
     }
 
     private InformacoesPedidoDTO converter(Pedido pedido){
