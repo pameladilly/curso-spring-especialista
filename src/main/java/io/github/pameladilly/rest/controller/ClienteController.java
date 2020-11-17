@@ -2,16 +2,19 @@ package io.github.pameladilly.rest.controller;
 
 import io.github.pameladilly.domain.entity.Cliente;
 import io.github.pameladilly.domain.repository.Clientes;
+import io.swagger.annotations.*;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/clientes")
+@Api("Api Clientes")
 public class ClienteController {
 
 
@@ -23,7 +26,12 @@ public class ClienteController {
 
 
     @GetMapping("{id}")
-    public Cliente getClienteById(@PathVariable Integer id) {
+    @ApiOperation("Obter detalhes de um cliente")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cliente encontrado"),
+            @ApiResponse(code = 404, message = "Cliente não encontrado para o ID informado")
+    })
+    public Cliente getClienteById(@PathVariable @ApiParam("ID do cliente") Integer id) {
 
         return clientes
                 .findById(id)
@@ -34,7 +42,12 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente save(@RequestBody Cliente cliente) {
+    @ApiOperation("Salva um novo cliente")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cliente cadastrado"),
+            @ApiResponse(code = 404, message = "Erro de validação")
+    })
+    public Cliente save(@RequestBody @Valid Cliente cliente) {
 
         return clientes.save(cliente);
 
@@ -58,7 +71,7 @@ public class ClienteController {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable Integer id,
-                                 @RequestBody Cliente cliente) {
+                                 @RequestBody @Valid Cliente cliente) {
 
         clientes
                 .findById(id)
